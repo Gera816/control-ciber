@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Salidas - Ciber</title>
+    <title>Historial - Ciber</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="contenedor" style="max-width: 750px;">
-        <h1>Panel de Control: Equipos Activos</h1>
-        <p>Monitoreo en tiempo real de los usuarios en las salas.</p>
+    <div class="contenedor" style="max-width: 900px;">
+        <h1>🗃️ Historial de Sesiones Terminadas</h1>
+        <p>Registro histórico de todos los usuarios.</p>
         
-        <table id="tabla-activas">
+        <table>
             <thead>
                 <tr>
                     <th>Usuario</th>
                     <th>Sala</th>
                     <th>PC</th>
-                    <th>Fecha</th> <th>Entrada</th>
-                    <th>Acción</th>
+                    <th>Fecha</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Tiempo Total</th>
                 </tr>
             </thead>
-            <tbody id="lista-activas">
+            <tbody id="lista-historial">
                 </tbody>
         </table>
 
         <br>
-        <a href="index.html">⬅️ Volver a Registro</a> | <a href="historial.html">Ver Historial 🗃️</a>
+        <a href="salidas.html">⬅️ Volver al Panel de Activos</a>
     </div>
 
     <script type="module" src="app.js"></script>
