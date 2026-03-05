@@ -15,7 +15,7 @@
             <label for="nombre">Nombre del Usuario:</label>
             <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
 
-           <label for="sala">Selecciona la Sala:</label>
+<label for="sala">Selecciona la Sala:</label>
             <select id="sala" required>
                 <option value="Auditorio">Auditorio</option>
                 <option value="Ludoteca">Ludoteca</option>
@@ -23,6 +23,14 @@
                 <option value="Sala Infantil">Sala Infantil</option>
                 <option value="Sala Digital">Sala Digital</option>
             </select>
+
+            <div id="contenedor-pc" style="display: none;">
+                <label for="computadora">Selecciona la PC (1-30):</label>
+                <select id="computadora">
+                    </select>
+            </div>
+
+            <button type="submit">Registrar Entrada</button>
 
             <label for="computadora">Selecciona la PC:</label>
             <select id="computadora" required>

@@ -1,6 +1,5 @@
 // 1. Importamos el núcleo de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-// IMPORTAMOS nuevas herramientas: query, where, onSnapshot, doc, updateDoc
 import { getFirestore, collection, addDoc, serverTimestamp, query, where, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 // 2. Tus llaves de acceso
@@ -21,14 +20,45 @@ const db = getFirestore(app);
 // 4. LÓGICA VENTANA 1: REGISTRAR ENTRADA
 // ==========================================
 const formulario = document.getElementById('formulario-entrada');
+const salaSelect = document.getElementById('sala');
+const contenedorPC = document.getElementById('contenedor-pc');
+const pcSelect = document.getElementById('computadora');
 
 if (formulario) {
+    // FUNCIÓN NUEVA: Mostrar/Ocultar y crear las 30 PCs
+    const actualizarVisibilidadPC = () => {
+        if (salaSelect.value === 'Sala Digital') {
+            contenedorPC.style.display = 'block'; // Mostramos el cuadro
+            pcSelect.required = true;
+            
+            // Si está vacío, creamos las 30 opciones con un ciclo (magia de programador)
+            if (pcSelect.options.length === 0) {
+                for (let i = 1; i <= 30; i++) {
+                    const opcion = document.createElement('option');
+                    opcion.value = `PC ${i}`;
+                    opcion.text = `PC ${i}`;
+                    pcSelect.appendChild(opcion);
+                }
+            }
+        } else {
+            contenedorPC.style.display = 'none'; // Ocultamos el cuadro
+            pcSelect.required = false;
+        }
+    };
+
+    // Escuchamos cada vez que el usuario cambia la sala
+    salaSelect.addEventListener('change', actualizarVisibilidadPC);
+    // Ejecutamos una vez al inicio para que detecte la sala por defecto
+    actualizarVisibilidadPC();
+
+    // Cuando le dan clic al botón Azul
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault(); 
 
         const nombreUsuario = document.getElementById('nombre').value;
-        const salaSeleccionada = document.getElementById('sala').value;
-        const pcSeleccionada = document.getElementById('computadora').value;
+        const salaSeleccionada = salaSelect.value;
+        // Si es sala digital guardamos la PC, si no, le ponemos "N/A" (No Aplica)
+        const pcSeleccionada = (salaSeleccionada === 'Sala Digital') ? pcSelect.value : "N/A";
 
         try {
             await addDoc(collection(db, "registros"), {
@@ -41,6 +71,7 @@ if (formulario) {
 
             alert("¡Entrada registrada con éxito en la nube! 🚀");
             formulario.reset(); 
+            actualizarVisibilidadPC(); // Reseteamos la vista de las PCs
 
         } catch (error) {
             console.error("Error al guardar: ", error);
@@ -55,18 +86,15 @@ if (formulario) {
 const listaActivas = document.getElementById('lista-activas');
 
 if (listaActivas) {
-    // Le decimos a Firebase: "Tráeme solo los registros que digan 'activo'"
     const consultaActivos = query(collection(db, "registros"), where("estado", "==", "activo"));
 
-    // onSnapshot es la magia que actualiza la pantalla en TIEMPO REAL
     onSnapshot(consultaActivos, (snapshot) => {
-        listaActivas.innerHTML = ""; // Limpiamos la tabla antes de re-dibujar
+        listaActivas.innerHTML = ""; 
 
         snapshot.forEach((documento) => {
             const datos = documento.data();
-            const id = documento.id; // El ID único de este registro
+            const id = documento.id; 
 
-            // Extraemos la hora para mostrarla bonita
             let horaFormateada = "Calculando...";
             let tiempoMilisegundos = 0;
             
@@ -76,7 +104,7 @@ if (listaActivas) {
                 tiempoMilisegundos = fecha.getTime();
             }
 
-            // Dibujamos la fila HTML inyectando los datos
+            // AQUI CAMBIAMOS EL TEXTO DEL BOTÓN ROJO A "Registrar Salida"
             const fila = `
                 <tr>
                     <td><strong>${datos.nombre}</strong></td>
@@ -84,7 +112,7 @@ if (listaActivas) {
                     <td>${datos.computadora}</td>
                     <td>${horaFormateada}</td>
                     <td>
-                        <button class="btn-salida" data-id="${id}" data-tiempo="${tiempoMilisegundos}" style="background-color: #ef4444;">Terminar y Cobrar</button>
+                        <button class="btn-salida" data-id="${id}" data-tiempo="${tiempoMilisegundos}" style="background-color: #ef4444;">Registrar Salida</button>
                     </td>
                 </tr>
             `;
@@ -92,13 +120,11 @@ if (listaActivas) {
         });
     });
 
-    // Escuchamos los clics en los botones rojos de "Terminar y Cobrar"
     listaActivas.addEventListener('click', async (e) => {
         if (e.target.classList.contains('btn-salida')) {
             const idRegistro = e.target.getAttribute('data-id');
             const tiempoEntrada = parseInt(e.target.getAttribute('data-tiempo'));
             
-            // Hacemos la matemática del tiempo
             const ahora = Date.now();
             const diferenciaMilisegundos = ahora - tiempoEntrada;
             
@@ -108,17 +134,14 @@ if (listaActivas) {
             
             const mensaje = `El usuario estuvo: ${horas} horas con ${minutosExtra} minutos.\n¿Confirmar salida y quitar de la lista?`;
             
-            // Si le damos a "Aceptar" en la ventanita, lo actualizamos en Firebase
             if(confirm(mensaje)) {
                 try {
                     const referenciaDoc = doc(db, "registros", idRegistro);
-                    // Cambiamos el estado a terminado y guardamos cuánto duró
                     await updateDoc(referenciaDoc, {
                         estado: "terminado",
                         hora_salida: serverTimestamp(),
                         duracion_minutos: minutosTotales
                     });
-                    // ¡No hace falta borrar la fila! onSnapshot detectará que ya no es "activo" y la quitará sola.
                 } catch(error) {
                     console.error("Error al actualizar la salida:", error);
                 }
