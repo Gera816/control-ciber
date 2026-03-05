@@ -1,0 +1,125 @@
+/* Variables para mantener el diseño consistente */
+:root {
+    --color-principal: #2563eb; /* Un azul muy profesional */
+    --color-hover: #1d4ed8;
+    --fondo-pantalla: #f3f4f6;
+    --fondo-tarjeta: #ffffff;
+    --texto-oscuro: #1f2937;
+    --borde: #e5e7eb;
+}
+
+/* Reseteo básico y fuente moderna */
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--fondo-pantalla);
+    color: var(--texto-oscuro);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Centra todo verticalmente */
+    margin: 0;
+    padding: 20px;
+}
+
+/* El "cascarón" blanco que contiene todo */
+.contenedor {
+    background: var(--fondo-tarjeta);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Sombra elegante */
+    width: 100%;
+    max-width: 650px;
+    text-align: center;
+}
+
+h1 {
+    color: var(--color-principal);
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+p {
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+/* Estilos del Formulario (Ventana 1) */
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+label {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input, select {
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--color-principal);
+}
+
+button {
+    margin-top: 30px;
+    padding: 14px;
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background-color: var(--color-hover);
+}
+
+button:active {
+    transform: scale(0.98); /* Efecto de "clic" */
+}
+
+/* Estilos de la Tabla (Ventana 2) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--borde);
+    text-align: left;
+}
+
+th {
+    background-color: var(--fondo-pantalla);
+    color: var(--texto-oscuro);
+    font-weight: 600;
+}
+
+/* Enlaces */
+a {
+    display: inline-block;
+    margin-top: 25px;
+    color: var(--color-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover {
+    text-decoration: underline;
+}
